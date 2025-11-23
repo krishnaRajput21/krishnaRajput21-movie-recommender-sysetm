@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Movie Recommender System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* General Body Styling (Dark Background) */
+        body {
+            background-color: #212529; /* Dark background color */
+            color: #f8f9fa; /* Light text color */
+        }
+        
+        /* Heading Font Weight (To look bold like in Image 2) */
+        h1, h2, .form-label {
+            font-weight: 700;
+        }
+
+        /* Centering the Movie Name (Important for alignment) */
+        .poster-container {
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Styling the Image */
+        .poster-img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px; /* Slightly rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+        }
+
+        /* Movie Title (Displayed above the poster) */
+        .movie-title {
+            font-size: 1.2em; /* Slightly larger text */
+            font-weight: bold;
+            margin-top: 15px; /* Space between the text and the image below */
+            margin-bottom: 5px;
+            /* To handle long names and prevent wrapping if possible */
+            white-space: normal; 
+            min-height: 2.4em; /* Ensures consistent vertical spacing for names */
+        }
+        
+        /* Style the Recommendations Subtitle (Top 5 Recommendations for...) */
+        .recommendation-subtitle {
+            font-size: 2rem; /* h2 size */
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="container mt-5">
+        <h1 class="my-4 text-center">Flask Movie Recommender System</h1>
+
+        <form method="POST" action="/" class="mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <label for="movie_name" class="form-label h5 visually-hidden">Select a movie to get recommendations:</label>
+                    <select name="movie_name" id="movie_name" class="form-select form-select-lg mb-3">
+                        {% for title in movie_titles %}
+                        <option value="{{ title }}" {% if selected_movie == title %} selected {% endif %}>{{ title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Get Recommendations</button>
+            </div>
+        </form>
+
+        {% if recommendation_data %}
+            <hr class="my-5">
+            <h2 class="text-center recommendation-subtitle">Top 5 Recommendations for <strong>{{ selected_movie }}</strong>:</h2>
+
+            <div class="row justify-content-center">
+                {% for name, poster in recommendation_data %}
+                <div class="col-2 poster-container">
+                    
+                    <div class="movie-title">{{ name }}</div>
+                    
+                    {% if poster %}
+                    <img src="{{ poster }}" alt="{{ name }} Poster" class="poster-img">
+                    {% else %}
+                    <div class="poster-img bg-secondary d-flex align-items-center justify-content-center text-center" style="height: 300px; color: #dee2e6;">Poster Not Found</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
