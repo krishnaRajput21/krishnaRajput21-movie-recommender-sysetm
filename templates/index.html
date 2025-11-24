@@ -39,7 +39,7 @@
             margin-top: 15px;
             margin-bottom: 5px;
             white-space: normal; 
-            min-height: 2.4em; /* Consistent vertical spacing */
+            min-height: 2.4em; /* Ensures consistent vertical spacing for names */
         }
         
         /* Style the Recommendations Subtitle */
@@ -58,13 +58,24 @@
         <form method="POST" action="/" class="mb-5">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <label for="movie_name" class="form-label h5 visually-hidden">Select a movie to get recommendations:</label>
-                    <select name="movie_name" id="movie_name" class="form-select form-select-lg mb-3">
+                    
+                    <label for="movie_name" class="form-label h5">Select or type a movie name:</label>
+                    
+                    <input 
+                        class="form-control form-control-lg mb-3" 
+                        list="movieOptions" 
+                        id="movie_name" 
+                        name="movie_name" 
+                        placeholder="Start typing the movie name..."
+                        value="{{ selected_movie or '' }}"
+                        required
+                    >
+                    <datalist id="movieOptions">
                         {% for title in movie_titles %}
-                        <option value="{{ title }}" {% if selected_movie == title %} selected {% endif %}>{{ title }}</option>
+                        <option value="{{ title }}">
                         {% endfor %}
-                    </select>
-                </div>
+                    </datalist>
+                    </div>
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary btn-lg">Get Recommendations</button>
@@ -77,7 +88,7 @@
 
             <div class="row justify-content-center">
                 {% for name, poster in recommendation_data %}
-                <div class="col-2 poster-container">
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2 poster-container">
                     
                     <div class="movie-title">{{ name }}</div>
                     
