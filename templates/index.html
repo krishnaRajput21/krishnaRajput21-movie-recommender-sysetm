@@ -1,97 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CinéKrish  Recommender</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <style>
-        /* General Body Styling (Dark Background) */
-        body {
-            background-color: #212529; /* Dark background color */
-            color: #f8f9fa; /* Light text color */
-        }
-        
-        /* Heading Font Weight */
-        h1, h2, .form-label {
-            font-weight: 700;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinéKrish Recommender</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* General Body Styling (Dark Background) */
+        body {
+            background-color: #212529; /* Dark background color */
+            color: #f8f9fa; /* Light text color */
+        }
+        
+        /* Heading Font Weight */
+        h1, h2,.form-label {
+            font-weight: 700;
+        }
 
-        /* Centering and spacing for posters */
-        .poster-container {
-            text-align: center;
-            padding: 10px;
-        }
+        /* Centering and spacing for posters */
+       .poster-container {
+            text-align: center;
+            padding: 10px;
+        }
 
-        /* Styling the Image */
-        .poster-img {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
+        /* Styling the Image */
+       .poster-img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
 
-        /* Movie Title (Displayed above the poster) */
-        .movie-title {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 15px;
-            margin-bottom: 5px;
-            white-space: normal; 
-            min-height: 2.4em; /* Ensures consistent vertical spacing for names */
-        }
-        
-        /* Style the Recommendations Subtitle */
-        .recommendation-subtitle {
-            font-size: 2rem;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-    </style>
+        /* Movie Title (Displayed above the poster) */
+       .movie-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            white-space: normal; 
+            min-height: 2.4em; /* Ensures consistent vertical spacing for names */
+        }
+        
+        /* Style the Recommendations Subtitle */
+       .recommendation-subtitle {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body class="p-4">
 
-    <div class="container mt-5">
-        <h1 class="my-4 text-center">Movie Recommender System</h1>
+    <div class="container mt-5">
+        <h1 class="my-4 text-center">Movie Recommender System</h1>
 
-        <form method="POST" action="/" class="mb-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <label for="movie_name" class="form-label h5 visually-hidden">Select a movie to get recommendations:</label>
-                    <select name="movie_name" id="movie_name" class="form-select form-select-lg mb-3">
-                        {% for title in movie_titles %}
-                        <option value="{{ title }}" {% if selected_movie == title %} selected {% endif %}>{{ title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg">Get Recommendations</button>
-            </div>
-        </form>
+        <form method="POST" action="/" class="mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    
+                    
+                    <input 
+                        class="form-control form-control-lg mb-3" 
+                        list="movieOptions" 
+                        id="movie_name" 
+                        name="movie_name" 
+                        placeholder="Start typing the movie name..."
+                        value="{{ selected_movie or '' }}"
+                        required
+                    >
+                    <datalist id="movieOptions">
+                        {% for title in movie_titles %}
+                        <option value="{{ title }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Get Recommendations</button>
+            </div>
+        </form>
 
-        {% if recommendation_data %}
-            <hr class="my-5">
-            <h2 class="text-center recommendation-subtitle">Top 5 Recommendations for <strong>{{ selected_movie }}</strong>:</h2>
+        {% if recommendation_data %}
+            <hr class="my-5">
+            <h2 class="text-center recommendation-subtitle">Top 5 Recommendations for <strong>{{ selected_movie }}</strong>:</h2>
 
-            <div class="row justify-content-center">
-                {% for name, poster in recommendation_data %}
-                <div class="col-6 col-sm-4 col-md-3 col-lg-2 poster-container">
-                    
-                    <div class="movie-title">{{ name }}</div>
-                    
-                    {% if poster %}
-                    <img src="{{ poster }}" alt="{{ name }} Poster" class="poster-img">
-                    {% else %}
-                    <div class="poster-img bg-secondary d-flex align-items-center justify-content-center text-center" style="height: 300px; color: #dee2e6;">Poster Not Found</div>
-                    {% endif %}
-                </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
+            <div class="row justify-content-center">
+                {% for name, poster in recommendation_data %}
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2 poster-container">
+                    
+                    <div class="movie-title">{{ name }}</div>
+                    
+                    {% if poster %}
+                    <img src="{{ poster }}" alt="{{ name }} Poster" class="poster-img">
+                    {% else %}
+                    <div class="poster-img bg-secondary d-flex align-items-center justify-content-center text-center" style="height: 300px; color: #dee2e6;">Poster Not Found</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
